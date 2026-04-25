@@ -127,7 +127,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Configurar Variables de Entorno
+### (opcional) 4. Configurar Variables de Entorno
 ```bash
 # Copiar plantilla
 cp .env.example .env
