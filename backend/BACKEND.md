@@ -1,78 +1,208 @@
-# Backend Food Loop Box - Django
+# Backend Food Loop Box - Django REST Framework
 
-## Descripción
+## 📖 Descripción
 
-Backend del proyecto Food Loop Box desarrollado en Django REST Framework. Este proyecto implementa una API completa para gestionar excedentes de alimentos en centros comerciales y restaurantes.
+Backend del proyecto Food Loop Box desarrollado en **Django REST Framework**. Este proyecto implementa una API completa (RESTful) para gestionar excedentes de alimentos en centros comerciales, restaurantes y dispositivos inteligentes.
 
-## Estructura del Proyecto
+**Base URL**: `http://localhost:8000/api/v1/`
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
-foodloopbox/
-├── foodloopbox/          # Configuración principal del proyecto
-├── apps/
-│   ├── core/             # Ubicaciones, aliados, dispositivos inteligentes
-│   ├── authentication/   # Autenticación y gestión de usuarios
-│   ├── products/         # Gestión de productos
-│   ├── transactions/     # Transacciones, reservas, recolecciones
-│   └── analytics/        # Reportes y análisis
-├── manage.py
-└── requirements.txt
+backend/
+├── foodloopbox/                  # 🔧 Configuración principal
+│   ├── settings.py              # Configuración de Django
+│   ├── urls.py                  # Enrutamiento principal
+│   ├── asgi.py                  # Servidor ASGI
+│   └── wsgi.py                  # Servidor WSGI
+│
+├── apps/                         # 📦 Aplicaciones del negocio
+│   ├── authentication/           # 🔐 Usuarios y autenticación
+│   │   ├── models.py           # User, AccessLog, UserPermission
+│   │   ├── serializers.py      # Serializadores
+│   │   ├── viewsets.py         # Vistas y endpoints
+│   │   ├── urls.py             # Rutas
+│   │   └── migrations/
+│   │
+│   ├── core/                     # 🏢 Ubicaciones y dispositivos
+│   │   ├── models.py           # Location, Partner, Device, Compartment
+│   │   ├── serializers.py
+│   │   ├── viewsets.py
+│   │   ├── urls.py
+│   │   └── migrations/
+│   │
+│   ├── products/                 # 🍔 Gestión de productos
+│   │   ├── models.py           # FoodCategory, Product
+│   │   ├── serializers.py
+│   │   ├── viewsets.py
+│   │   ├── urls.py
+│   │   └── migrations/
+│   │
+│   ├── transactions/             # 💳 Compras y reservas
+│   │   ├── models.py           # Transaction, Reservation, Collection
+│   │   ├── serializers.py
+│   │   ├── viewsets.py
+│   │   ├── urls.py
+│   │   └── migrations/
+│   │
+│   └── analytics/                # 📊 Reportes y estadísticas
+│       ├── models.py           # DailyStatistics, LocationMetrics
+│       ├── serializers.py
+│       ├── viewsets.py
+│       ├── urls.py
+│       └── migrations/
+│
+├── manage.py                     # CLI de Django
+├── requirements.txt              # Dependencias Python
+├── init_database.py             # Script para datos de prueba
+├── .env.example                 # Plantilla de variables de entorno
+└── BACKEND.md                   # Este archivo
 ```
 
-## Instalación
+---
 
-### Requisitos previos
+## ⚙️ Requisitos Previos
+
+### Software Necesario
+```bash
+# Todos los sistemas
 - Python 3.8+
-- pip
-- Virtual environment
+- pip (gestor de paquetes Python)
+- Git
 
-### Pasos de instalación
-
-1. **Clonar el repositorio**
-```bash
-cd foodloopbox
+# Linux/Mac (opcional para producción)
+- PostgreSQL 13+
+- Redis 6+
 ```
 
-2. **Crear un ambiente virtual**
+### Verificar Instalación
 ```bash
-python -m venv venv
+python --version
+pip --version
+git --version
+```
 
-# En Windows
-venv\Scripts\activate
+---
 
-# En Linux/Mac
+## 🚀 Instalación y Setup
+
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/tu-repo/Food-Loop-Box.git
+cd Food-Loop-Box/backend
+```
+
+### 2. Crear Ambiente Virtual
+```bash
+# Linux/Mac
+python3 -m venv venv
 source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
 ```
 
-3. **Instalar dependencias**
+### 3. Instalar Dependencias
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configurar variables de entorno**
+### 4. Configurar Variables de Entorno
 ```bash
+# Copiar plantilla
 cp .env.example .env
+
+# Editar .env con tus valores (opcional para desarrollo)
+nano .env  # o usa tu editor preferido
 ```
 
-5. **Ejecutar migraciones**
+### 5. Ejecutar Migraciones
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-6. **Crear superusuario**
+### 6. Crear Superusuario (Admin)
 ```bash
 python manage.py createsuperuser
+# Ingresa: username, email, contraseña
 ```
 
-7. **Ejecutar servidor de desarrollo**
+### 7. (Opcional) Cargar Datos de Prueba
+```bash
+python manage.py shell < init_database.py
+```
+
+### 8. Iniciar Servidor de Desarrollo
 ```bash
 python manage.py runserver
 ```
 
-El servidor estará disponible en: http://localhost:8000
+**El servidor estará disponible en**: `http://localhost:8000`  
+**Admin panel**: `http://localhost:8000/admin/`  
+**API docs**: `http://localhost:8000/api/v1/schema/` (si drf-spectacular está instalado)
 
-## API Endpoints
+---
+
+## 🔧 Configuración
+
+### .env - Variables de Entorno
+
+```bash
+# ========== DJANGO SETTINGS ==========
+DEBUG=True                              # False en producción
+SECRET_KEY=django-insecure-tu-clave    # Cambiar en producción ⚠️
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# ========== DATABASE ==========
+# SQLite (desarrollo - comentar para usar PostgreSQL)
+DATABASE_URL=sqlite:///db.sqlite3
+
+# PostgreSQL (producción - descomentar y configurar)
+# DB_ENGINE=django.db.backends.postgresql
+# DB_NAME=foodloopbox_db
+# DB_USER=postgres
+# DB_PASSWORD=tu-contraseña-segura
+# DB_HOST=localhost
+# DB_PORT=5432
+
+# ========== JWT (JSON Web Tokens) ==========
+JWT_ACCESS_TOKEN_LIFETIME=3600         # 1 hora en segundos
+JWT_REFRESH_TOKEN_LIFETIME=86400       # 1 día en segundos
+JWT_ALGORITHM=HS256
+
+# ========== CORS (Frontend) ==========
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+
+# ========== CACHE (opcional) ==========
+# REDIS_URL=redis://localhost:6379/0
+
+# ========== EMAIL (opcional) ==========
+# EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# EMAIL_HOST=smtp.gmail.com
+# EMAIL_PORT=587
+# EMAIL_HOST_USER=tu-email@gmail.com
+# EMAIL_HOST_PASSWORD=tu-contraseña-app
+# EMAIL_USE_TLS=True
+```
+
+### settings.py - Configuración Principal
+
+Ubicado en `foodloopbox/settings.py`. Configuraciones automáticas:
+- ✅ Todas las apps registradas
+- ✅ Autenticación JWT configurada
+- ✅ CORS habilitado para frontend
+- ✅ Paginación: 20 items por página
+- ✅ Filtrado y búsqueda habilitados
+- ✅ Zona horaria: `America/Bogota`
+- ✅ Idioma: `es-ES` (Español)
+
+---
+
+## 📡 API Endpoints
 
 ### Autenticación
 - `POST /api/v1/auth/token/` - Obtener token JWT

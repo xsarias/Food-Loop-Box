@@ -6,41 +6,23 @@ Proyecto de Construcción de Software que busca reducir el desperdicio de alimen
 
 **Versión**: 1.0.0  
 **Equipo**: Construcción de Software  
-**Institución**: Pontificia Universidad Javeriana  
-**Fecha**: 2026
+**Institución**: Universidad Distrital Francisco José de Caldas  
+**Semestre**: 2026-1
 
 ---
 
-## Tabla de Contenidos
-
-1. [Descripción del Proyecto](#descripción-del-proyecto)
-2. [Stack Tecnológico](#stack-tecnológico)
-3. [Requisitos Previos](#requisitos-previos)
-4. [Instalación](#instalación)
-5. [Configuración](#configuración)
-6. [Estructura del Proyecto](#estructura-del-proyecto)
-7. [API REST - Documentación Completa](#api-rest---documentación-completa)
-8. [Autenticación JWT](#autenticación-jwt)
-9. [Guía para el Frontend](#guía-para-el-frontend)
-10. [Modelos de Datos](#modelos-de-datos)
-11. [Ejemplos de Uso](#ejemplos-de-uso)
-12. [Roles y Permisos](#roles-y-permisos)
-13. [Troubleshooting](#troubleshooting)
-
----
-
-## Descripción del Proyecto
+## 📋 Descripción del Proyecto
 
 ### Problema a Resolver
 Aproximadamente el 30-40% de alimentos producidos se desperdician globalmente. Restaurantes, supermercados y establecimientos comerciales descartan diariamente alimentos en perfecto estado que podrían beneficiar a personas con recursos limitados.
 
 ### Solución
 **Food-Loop-Box** es una plataforma que:
-- ✅ Permite a aliados comerciales registrar excedentes de alimentos
-- ✅ Facilita reservas y compras de productos a precios reducidos
-- ✅ Gestiona dispositivos refrigerados inteligentes (Food Loop Box)
-- ✅ Proporciona reportes de impacto ambiental y social
-- ✅ Crea un ciclo completo de rescate alimentario
+- Permite a aliados comerciales registrar excedentes de alimentos.
+- Facilita reservas y compras de productos a precios reducidos.
+- Gestiona dispositivos refrigerados inteligentes (Food Loop Box).
+- Proporciona reportes de impacto ambiental y social.
+- Crea un ciclo completo de rescate alimentario.
 
 ### Flujo Principal
 ```
@@ -53,450 +35,118 @@ Dona o vende        (Control de temperatura)    Retira con código
 
 ---
 
-## Stack Tecnológico
+## 🛠️ Stack Tecnológico
 
-### Backend
-| Tecnología | Versión | Propósito |
-|-----------|---------|----------|
-| **Python** | 3.8+ | Lenguaje principal |
-| **Django** | 4.2.0 | Framework web |
-| **Django REST Framework** | 3.14.0 | API REST |
-| **JWT (SimpleJWT)** | 5.2.2 | Autenticación |
-| **PostgreSQL** | 13+ | Base de datos (producción) |
-| **SQLite** | - | Base de datos (desarrollo) |
-| **Gunicorn** | 20.1.0 | Servidor WSGI |
-| **Redis** | 6+ | Cache y Celery broker |
-| **Celery** | 5.3.1 | Tareas asincrónicas |
-
-### Herramientas Adicionales
-- **django-cors-headers**: Permitir peticiones desde frontend
-- **django-filter**: Filtrado avanzado de datos
-- **Pillow**: Procesamiento de imágenes
-- **python-dotenv**: Gestión de variables de entorno
-- **drf-spectacular**: Documentación automática de API
+| Componente | Tecnología | Versión |
+|-----------|-----------|----------|
+| **Backend** | Python + Django + DRF | 3.8+ / 4.2.0 / 3.14.0 |
+| **Base de Datos** | PostgreSQL (prod) / SQLite (dev) | 13+ / - |
+| **Autenticación** | JWT (SimpleJWT) | 5.2.2 |
+| **Frontend** | React + Vite | 18+ / 5.0+ |
+| **Cache/Broker** | Redis | 6+ |
+| **Tareas Async** | Celery | 5.3.1 |
 
 ---
 
-## Requisitos Previos
-
-### Software Necesario
-```bash
-# Windows
-- Python 3.8 o superior
-- pip (gestor de paquetes Python)
-- Git
-
-# Linux/Mac
-- Python 3.8 o superior
-- pip
-- Git
-- (Opcional) PostgreSQL para producción
-- (Opcional) Redis para caché
-```
-
-### Verificar Instalación
-```bash
-python --version
-pip --version
-git --version
-```
-
----
-
-## Instalación
-
-### 1. Clonar el Repositorio
-```bash
-git clone https://github.com/tu-repo/Food-Loop-Box.git
-cd Food-Loop-Box/backend
-```
-
-### 2. Crear Ambiente Virtual
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
-
-# Linux/Mac
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Instalar Dependencias
-```bash
-pip install -r requirements.txt
-```
-
-### (opcional) 4. Configurar Variables de Entorno
-```bash
-# Copiar plantilla
-cp .env.example .env
-
-# Editar .env con tus valores
-# DEBUG=True
-# SECRET_KEY=tu-clave-secreta
-# DATABASE_URL=sqlite:///db.sqlite3
-```
-
-### 5. Ejecutar Migraciones
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### 6. Crear Superusuario (Admin)
-```bash
-python manage.py createsuperuser
-# Ingresa: username, email, contraseña
-```
-
-### 7. (Opcional) Cargar Datos de Prueba
-```bash
-python manage.py shell < init_database.py
-```
-
-### 8. Iniciar Servidor
-```bash
-python manage.py runserver
-```
-
-**El servidor estará disponible en**: `http://localhost:8000`
-
----
-
-## Configuración
-
-### .env - Variables de Entorno
-
-```bash
-# Django Settings
-DEBUG=True                              # False en producción
-SECRET_KEY=django-insecure-tu-clave    # Cambiar en producción
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Database
-# SQLite (desarrollo)
-# DATABASE_URL=sqlite:///db.sqlite3
-
-# PostgreSQL (producción - descomentar)
-# DB_ENGINE=django.db.backends.postgresql
-# DB_NAME=foodloopbox_db
-# DB_USER=postgres
-# DB_PASSWORD=tu-contraseña
-# DB_HOST=localhost
-# DB_PORT=5432
-
-# JWT - Duración de Tokens
-JWT_ACCESS_TOKEN_LIFETIME=3600         # 1 hora en segundos
-JWT_REFRESH_TOKEN_LIFETIME=86400       # 1 día en segundos
-
-# CORS - Orígenes Permitidos (Frontend)
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-```
-
-### settings.py - Configuración Principal
-
-Ubicado en `foodloopbox/foodloopbox/settings.py`. Incluye:
-- Todas las apps registradas
-- Autenticación JWT configurada
-- CORS habilitado
-- Paginación (20 items por página)
-- Filtrado y búsqueda habilitados
-- Zona horaria: America/Bogota
-- Idioma: Español
-
----
-
-## Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 Food-Loop-Box/
+├── backend/                    # API REST (Django)
+│   ├── apps/
+│   │   ├── authentication/    # Usuarios y autenticación
+│   │   ├── core/             # Ubicaciones y dispositivos
+│   │   ├── products/         # Gestión de productos
+│   │   ├── transactions/     # Compras y reservas
+│   │   └── analytics/        # Reportes y estadísticas
+│   ├── foodloopbox/          # Configuración Django
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── BACKEND.md           # Documentación completa
 │
-├── backend/                           # ← Backend Django
-│   ├── foodloopbox/                  # Configuración principal
-│   │   ├── settings.py               # Configuración de Django
-│   │   ├── urls.py                   # Enrutador principal
-│   │   ├── asgi.py                   # Servidor ASGI
-│   │   └── wsgi.py                   # Servidor WSGI
-│   │
-│   ├── apps/                         # Aplicaciones del negocio
-│   │   ├── authentication/           # 🔐 Usuarios y autenticación
-│   │   ├── core/                     # 🏢 Ubicaciones y dispositivos
-│   │   ├── products/                 # 🍔 Gestión de productos
-│   │   ├── transactions/             # 💳 Compras y reservas
-│   │   └── analytics/                # 📊 Reportes y estadísticas
-│   │
-│   ├── manage.py                     # Herramienta CLI
-│   ├── requirements.txt              # Dependencias Python
-│   ├── init_database.py              # Script datos de prueba
-│   └── .env.example                  # Plantilla de variables
+├── frontend/                  # UI (React + Vite)
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── vite.config.js
+│   └── README.md            # Documentación completa
 │
-├── .gitignore                         # Archivos a ignorar en Git
-└── README.md                          # Este archivo
+└── README.md                 # Este archivo
 ```
 
-### Descripción de Apps
+---
 
-#### apps/authentication/ - Autenticación y Usuarios
-- Gestión de usuarios con roles
-- Autenticación JWT
-- Registro y login
-- Cambio de contraseña
-- Registro de accesos (auditoría)
-- Permisos personalizados
+## 🚀 Inicio Rápido
 
-#### apps/core/ - Ubicaciones y Dispositivos
-- Ubicaciones (restaurantes, supermercados, centros comerciales)
-- Aliados de negocio (proveedores de alimentos)
-- Dispositivos Food Loop Box (máquinas refrigeradas)
-- Compartimentos dentro de dispositivos
-- Estadísticas por ubicación
+### Backend
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # o: venv\Scripts\activate (Windows)
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+**Servidor**: http://localhost:8000
 
-#### apps/products/ - Gestión de Productos
-- Categorías de alimentos
-- Registro de productos
-- Control de temperatura
-- Fechas de vencimiento
-- Precios y descuentos
-- Imágenes de productos
-- Estado de disponibilidad
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+**Aplicación**: http://localhost:5173
 
-#### apps/transactions/ - Compras y Reservas
-- Transacciones/compras de productos
-- Métodos de pago
-- Códigos de retiro
+---
+
+## 📚 Documentación Completa
+
+- **[Backend - Setup, API, Configuración](backend/BACKEND.md)**
+- **[Frontend - Setup, Guía de Desarrollo](frontend/README.md)**
+
+---
+
+## 🔑 Características Principales
+
+### Gestión de Excedentes
+- Aliados registran productos disponibles en tiempo real
+- Control automático de fechas de vencimiento
+- Categorización de alimentos por tipo
+
+### Dispositivos Inteligentes
+- Food Loop Box: Máquinas refrigeradas geolocalizedas
+- Sincronización de temperatura y estado
+- Compartimientos específicos por producto
+
+### Transacciones
 - Reservas de productos
-- Tracking de recolección
+- Compras con códigos de retiro
+- Historial de transacciones
 
-#### apps/analytics/ - Reportes y Estadísticas
-- Estadísticas diarias agregadas
-- Métricas por ubicación
-- Métricas por aliado
-- Impacto ambiental (CO2, agua ahorrada)
-- Vidas impactadas
-
----
-
-## API REST - Documentación Completa
-
-### Base URL
-```
-http://localhost:8000/api/v1/
-```
-
-### Autenticación JWT
-
-Todos los endpoints (excepto login/registro) requieren autenticación con JWT.
-
-#### Headers Requeridos
-```
-Authorization: Bearer <access_token>
-Content-Type: application/json
-```
+### Analytics & Reportes
+- Estadísticas de impacto ambiental (CO2, agua ahorrada)
+- Métricas por ubicación y aliado
+- Dashboard de control
 
 ---
 
-## AUTENTICACIÓN - `/auth/`
+## 👥 Roles del Sistema
 
-### 1. **POST** - Obtener Tokens JWT
-```http
-POST /api/v1/auth/token/
-Content-Type: application/json
-
-{
-  "username": "usuario@example.com",
-  "password": "contraseña123"
-}
-```
-
-**Respuesta (200 OK):**
-```json
-{
-  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": 1,
-    "username": "usuario@example.com",
-    "email": "usuario@example.com",
-    "first_name": "Juan",
-    "last_name": "Pérez",
-    "role": "customer",
-    "is_verified": true,
-    "phone": "3001234567"
-  }
-}
-```
-
-**Códigos de Error:**
-- `401 Unauthorized`: Credenciales inválidas
+- **Cliente**: Busca, reserva y compra productos
+- **Aliado**: Registra y gestiona excedentes
+- **Admin**: Gestión global de ubicaciones, dispositivos y reportes
 
 ---
 
-### 2. **POST** - Refrescar Token de Acceso
-```http
-POST /api/v1/auth/token/refresh/
-Content-Type: application/json
+## 🤝 Contribuciones
 
-{
-  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-**Respuesta (200 OK):**
-```json
-{
-  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
+Este es un proyecto académico de la Universidad Distrital Francisco José de Caldas.
 
 ---
 
-### 3. **POST** - Registrar Nuevo Usuario
-```http
-POST /api/v1/auth/users/
-Content-Type: application/json
+## 📝 Licencia
 
-{
-  "username": "nuevo_usuario",
-  "email": "nuevo@example.com",
-  "password": "Password123!",
-  "password_confirm": "Password123!",
-  "first_name": "María",
-  "last_name": "García",
-  "phone": "3109876543",
-  "document_type": "cc",
-  "document_id": "1234567890",
-  "role": "customer"
-}
-```
-
-**Respuesta (201 Created):**
-```json
-{
-  "id": 2,
-  "username": "nuevo_usuario",
-  "email": "nuevo@example.com",
-  "first_name": "María",
-  "last_name": "García",
-  "phone": "3109876543",
-  "role": "customer",
-  "is_verified": false,
-  "created_at": "2026-04-25T10:30:00Z"
-}
-```
-
----
-
-### 4. **GET** - Obtener Perfil del Usuario Actual
-```http
-GET /api/v1/auth/users/me/
-Authorization: Bearer <access_token>
-```
-
-**Respuesta (200 OK):**
-```json
-{
-  "id": 1,
-  "username": "usuario@example.com",
-  "email": "usuario@example.com",
-  "first_name": "Juan",
-  "last_name": "Pérez",
-  "role": "customer",
-  "is_verified": true,
-  "phone": "3001234567",
-  "document_id": "1023456789",
-  "profile_picture": "https://example.com/media/profiles/user_1.jpg",
-  "custom_permissions": [
-    {
-      "id": 1,
-      "permission_name": "ver_productos",
-      "category": "products",
-      "can_view": true,
-      "can_edit": false,
-      "can_delete": false,
-      "can_export": false
-    }
-  ]
-}
-```
-
----
-
-### 5. **PUT** - Actualizar Perfil
-```http
-PUT /api/v1/auth/users/me/
-Authorization: Bearer <access_token>
-Content-Type: application/json
-
-{
-  "first_name": "Juan",
-  "last_name": "Pérez López",
-  "phone": "3201234567"
-}
-```
-
-**Respuesta (200 OK):** Perfil actualizado
-
----
-
-### 6. **POST** - Cambiar Contraseña
-```http
-POST /api/v1/auth/users/change_password/
-Authorization: Bearer <access_token>
-Content-Type: application/json
-
-{
-  "old_password": "contraseña_actual",
-  "new_password": "nueva_contraseña",
-  "new_password_confirm": "nueva_contraseña"
-}
-```
-
----
-
-## CORE (Ubicaciones, Aliados, Dispositivos) - `/core/`
-
-### 7. **GET** - Listar Ubicaciones
-```http
-GET /api/v1/core/locations/
-Authorization: Bearer <access_token>
-```
-
-**Query Parameters:**
-```
-?location_type=restaurant        # Filtro: tipo de ubicación
-?city=Bogotá                     # Filtro: ciudad
-?is_active=true                  # Filtro: activa/inactiva
-?search=centro                   # Búsqueda: nombre o dirección
-?ordering=-created_at            # Ordenar: -created_at (desc), name (asc)
-?page=1                          # Paginación
-```
-
-**Respuesta (200 OK):**
-```json
-{
-  "count": 15,
-  "next": "http://localhost:8000/api/v1/core/locations/?page=2",
-  "previous": null,
-  "results": [
-    {
-      "id": 1,
-      "name": "Centro Comercial Hayuelos",
-      "location_type": "commercial_center",
-      "address": "Carrera 81 #10-10",
-      "city": "Bogotá",
-      "postal_code": "110811",
-      "latitude": 4.635,
-      "longitude": -74.133,
-      "phone": "(1) 6237700",
-      "email": "info@hayuelos.com",
-      "is_active": true,
-      "created_at": "2026-04-20T08:00:00Z",
-      "updated_at": "2026-04-25T10:30:00Z"
-    }
-  ]
-}
-```
+Proyecto de Construcción de Software 2026
 
 ---
 
