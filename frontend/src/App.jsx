@@ -9,6 +9,7 @@ import ObtenerAlimento from './pages/ObtenerAlimento'
 import ReclamarAlimento from './pages/ReclamarAlimento'
 import VenderAlimento from './pages/VenderAlimento'
 import Dashboard from './pages/Dashboard'
+import Inventario from './pages/Inventario'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/vender" element={<VenderAlimento />} />
           <Route path="/reclamar" element={<ReclamarAlimento />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/inventario" element={<Inventario />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

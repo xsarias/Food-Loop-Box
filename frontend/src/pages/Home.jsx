@@ -34,6 +34,11 @@ function Home() {
             >
               Hola, <strong>{user.first_name || user.username}</strong>
             </span>
+            {['admin', 'partner'].includes(user.role) && (
+              <button className="inventario-btn" type="button" onClick={() => navigate('/inventario')}>
+                Inventario
+              </button>
+            )}
             {user.role === 'admin' && (
               <button className="dashboard-btn" type="button" onClick={() => navigate('/dashboard')}>
                 Dashboard
