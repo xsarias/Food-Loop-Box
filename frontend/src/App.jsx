@@ -11,6 +11,7 @@ import VenderAlimento from './pages/VenderAlimento'
 import Dashboard from './pages/Dashboard'
 import Inventario from './pages/Inventario'
 import Alertas from './pages/Alertas'
+import Usuarios from './pages/Usuarios'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/alertas" element={<Alertas />} />
+          <Route path="/usuarios" element={<Usuarios />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -6,8 +6,10 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.filters import SearchFilter
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
-    filter_backends = ['django_filters.rest_framework.DjangoFilterBackend']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['role', 'is_verified', 'is_active']
     search_fields = ['username', 'email', 'first_name', 'last_name']
     
@@ -144,7 +146,7 @@ class UserPermissionViewSet(viewsets.ModelViewSet):
     queryset = UserPermission.objects.all()
     serializer_class = UserPermissionSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
-    filter_backends = ['django_filters.rest_framework.DjangoFilterBackend']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['user', 'category']
     search_fields = ['permission_name', 'user__username']
     
@@ -165,7 +167,7 @@ class AccessLogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AccessLog.objects.all()
     serializer_class = AccessLogSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
-    filter_backends = ['django_filters.rest_framework.DjangoFilterBackend']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['status', 'user']
     search_fields = ['email', 'ip_address']
     ordering_fields = ['timestamp']

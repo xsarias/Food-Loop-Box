@@ -56,6 +56,11 @@ function Home() {
               </button>
             )}
             {user.role === 'admin' && (
+              <button className="usuarios-btn" type="button" onClick={() => navigate('/usuarios')}>
+                Usuarios
+              </button>
+            )}
+            {user.role === 'admin' && (
               <button className="dashboard-btn" type="button" onClick={() => navigate('/dashboard')}>
                 Dashboard
               </button>

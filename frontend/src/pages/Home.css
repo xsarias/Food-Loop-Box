@@ -184,6 +184,23 @@
   line-height: 1.4;
 }
 
+.usuarios-btn {
+  background: #fff;
+  border: 1.5px solid rgba(26, 58, 122, 0.3);
+  color: #1a3a7a;
+  border-radius: 999px;
+  padding: 0.65rem 1.15rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  transition: transform 0.25s ease, background 0.2s;
+}
+
+.usuarios-btn:hover {
+  background: #e8f0fd;
+  transform: translateY(-2px);
+}
+
 .dashboard-btn {
   background: linear-gradient(135deg, #1a3a7a, #2e5fc2);
   color: #f0f5ff;
