@@ -1,0 +1,309 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+
+:root {
+  --leaf-900: #14302a;
+  --leaf-700: #1f4d42;
+  --leaf-500: #2f7f67;
+  --cream: #fffdf6;
+  --char: #1f2524;
+}
+
+.reg-page {
+  min-height: 100vh;
+  font-family: "Manrope", sans-serif;
+  color: var(--char);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(47, 127, 103, 0.2), transparent 36%),
+    radial-gradient(circle at 85% 15%, rgba(246, 201, 95, 0.2), transparent 30%),
+    linear-gradient(170deg, var(--cream), #f3fbf7 55%, #edf7f2 100%);
+  padding: 1rem 1.2rem 3rem;
+}
+
+/* Header */
+.reg-header {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reg-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reg-brand h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--leaf-900);
+}
+
+.reg-brand p {
+  margin: 0.1rem 0 0;
+  font-size: 0.84rem;
+  color: var(--leaf-700);
+}
+
+.back-btn {
+  background: #fff;
+  border: 1.5px solid rgba(20, 48, 42, 0.15);
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--leaf-900);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(20, 48, 42, 0.12);
+}
+
+/* Main */
+.reg-main {
+  max-width: 780px;
+  margin: 1.8rem auto 0;
+}
+
+.reg-title-row {
+  margin-bottom: 1.4rem;
+}
+
+.reg-title-row h1 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  color: var(--leaf-900);
+}
+
+.reg-title-row p {
+  margin: 0.3rem 0 0;
+  color: #3a524d;
+  font-size: 0.95rem;
+}
+
+/* Form */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-section {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(20, 48, 42, 0.08);
+  border-radius: 18px;
+  padding: 1.3rem 1.4rem;
+  box-shadow: 0 4px 16px rgba(20, 48, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.section-title {
+  margin: 0 0 0.2rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1rem;
+  color: var(--leaf-700);
+  border-bottom: 1.5px solid rgba(20, 48, 42, 0.08);
+  padding-bottom: 0.55rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-group.full {
+  grid-column: 1 / -1;
+}
+
+.field-group label {
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: var(--leaf-900);
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  border: 1.5px solid rgba(20, 48, 42, 0.16);
+  border-radius: 10px;
+  padding: 0.62rem 0.85rem;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.93rem;
+  color: var(--char);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  border-color: var(--leaf-500);
+  box-shadow: 0 0 0 3px rgba(47, 127, 103, 0.12);
+}
+
+.field-group input::placeholder,
+.field-group textarea::placeholder {
+  color: #9bb0ab;
+}
+
+.file-input {
+  padding: 0.45rem 0.7rem !important;
+  font-size: 0.88rem !important;
+}
+
+.discount-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--leaf-700);
+  background: #e7f8ef;
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+}
+
+/* Error */
+.reg-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #c0392b;
+  background: #fdf0ee;
+  border: 1px solid #f5c6c1;
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.reg-btn-primary {
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1.6rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reg-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(20, 48, 42, 0.18);
+}
+
+.reg-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reg-btn-secondary {
+  background: #fff;
+  border: 1.5px solid rgba(20, 48, 42, 0.15);
+  border-radius: 12px;
+  padding: 0.85rem 1.4rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--leaf-900);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.reg-btn-secondary:hover {
+  transform: translateY(-2px);
+}
+
+/* Success */
+.reg-success-card {
+  max-width: 480px;
+  margin: 5rem auto;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(20, 48, 42, 0.08);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(20, 48, 42, 0.1);
+  animation: rise 0.5s ease-out;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+}
+
+.reg-success-card h2 {
+  margin: 0.8rem 0 0.4rem;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--leaf-900);
+  font-size: 1.6rem;
+}
+
+.reg-success-card p {
+  margin: 0 0 1.5rem;
+  color: #3a524d;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .reg-btn-primary,
+  .reg-btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}

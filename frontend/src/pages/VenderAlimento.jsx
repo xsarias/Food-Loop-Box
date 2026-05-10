@@ -1,14 +1,5 @@
-import ActionPage from "./ActionPage";
+import RegistrarProducto from './RegistrarProducto'
 
-function VenderAlimento(){
-    return(
-        <ActionPage
-            title="Vender Alimento"
-            subtitle="Ofrece excedentes a precio justo para evitar desperdicio y recuperar parte de tus costos operativos."
-            tags={["Precio justo", "Excedentes", "Comercio local"]}
-            ctaPrimary="Crear oferta"
-            ctaSecondary="Ver mercado"
-        />
-    )
+export default function VenderAlimento() {
+  return <RegistrarProducto tipo="sale" />
 }
-export default VenderAlimento
