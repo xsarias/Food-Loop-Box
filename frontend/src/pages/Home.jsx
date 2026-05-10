@@ -27,7 +27,11 @@ function Home() {
 
         {isAuthenticated ? (
           <div className="user-block">
-            <span className="user-greeting">
+            <span
+              className="user-greeting"
+              onClick={() => navigate('/perfil')}
+              style={{ cursor: 'pointer' }}
+            >
               Hola, <strong>{user.first_name || user.username}</strong>
             </span>
             <button className="login-btn" type="button" onClick={handleLogout}>
