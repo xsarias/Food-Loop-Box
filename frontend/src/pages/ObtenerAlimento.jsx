@@ -1,8 +1,117 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import './ObtenerAlimento.css'
+
+const PAYMENT_METHODS = [
+  { key: 'cash',           label: 'Efectivo',        icon: '💵' },
+  { key: 'card',           label: 'Tarjeta',          icon: '💳' },
+  { key: 'mobile_payment', label: 'Pago Móvil',       icon: '📱' },
+  { key: 'transfer',       label: 'Transferencia',    icon: '🏦' },
+]
+
+function PaymentModal({ product, onClose, onSuccess }) {
+  const [method, setMethod] = useState('cash')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [result, setResult] = useState(null)
+  const overlayRef = useRef(null)
+
+  const price = parseFloat(product.final_price) || 0
+
+  const handleOverlayClick = (e) => {
+    if (e.target === overlayRef.current && !result) onClose()
+  }
+
+  const handlePay = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const { data } = await api.post('/transactions/transactions/', {
+        product: product.id,
+        amount: price,
+        payment_method: method,
+      })
+      setResult(data)
+      onSuccess(product.id)
+    } catch (err) {
+      const d = err.response?.data
+      setError(
+        d && typeof d === 'object'
+          ? Object.values(d).flat()[0]
+          : 'No se pudo procesar el pago. Intenta de nuevo.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fmt = (n) =>
+    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n)
+
+  return (
+    <div className="modal-overlay" ref={overlayRef} onClick={handleOverlayClick}>
+      <div className="payment-modal">
+        {result ? (
+          /* ── Éxito ── */
+          <div className="modal-success">
+            <span className="success-icon">✅</span>
+            <h2>¡Pago exitoso!</h2>
+            <p className="success-product">{product.name}</p>
+            <p className="success-amount">{fmt(price)}</p>
+            <div className="code-box">
+              <p className="code-label">Código de retiro</p>
+              <p className="code-value">{result.withdrawal_code}</p>
+              <p className="code-hint">Preséntalo en el locker para retirar tu producto</p>
+            </div>
+            <button className="btn-done" onClick={onClose}>Listo</button>
+          </div>
+        ) : (
+          /* ── Formulario ── */
+          <>
+            <div className="modal-header">
+              <h2>Confirmar compra</h2>
+              <button className="modal-close" onClick={onClose}>✕</button>
+            </div>
+
+            <div className="modal-product">
+              <span className="modal-product-name">{product.name}</span>
+              <span className="modal-product-meta">
+                {product.category_name} · {product.quantity} {product.unit}
+              </span>
+              <span className="modal-price">{fmt(price)}</span>
+            </div>
+
+            <p className="modal-section-label">Método de pago</p>
+            <div className="method-grid">
+              {PAYMENT_METHODS.map(m => (
+                <button
+                  key={m.key}
+                  className={`method-btn ${method === m.key ? 'method-active' : ''}`}
+                  onClick={() => setMethod(m.key)}
+                >
+                  <span className="method-icon">{m.icon}</span>
+                  <span>{m.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {error && <p className="modal-error">{error}</p>}
+
+            <button
+              className="btn-pay"
+              disabled={loading}
+              onClick={handlePay}
+            >
+              {loading ? 'Procesando…' : `Pagar ${fmt(price)}`}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
 
 function timeUntilExpiry(dateStr) {
   const diff = new Date(dateStr) - Date.now()
@@ -21,7 +130,7 @@ function formatPrice(price) {
   }).format(price)
 }
 
-function ProductCard({ product, onReserve, reserving }) {
+function ProductCard({ product, onReserve, onBuy, reserving }) {
   const expiry = timeUntilExpiry(product.expiration_date)
   const isExpiringSoon = new Date(product.expiration_date) - Date.now() < 8 * 3_600_000
   const isDonation = product.product_type === 'donation'
@@ -58,19 +167,23 @@ function ProductCard({ product, onReserve, reserving }) {
           <span className="product-price">
             {isDonation ? 'GRATIS' : formatPrice(product.final_price)}
           </span>
-          <button
-            className="reserve-btn"
-            onClick={() => onReserve(product.id)}
-            disabled={product.is_reserved || reserving === product.id}
-          >
-            {product.is_reserved
-              ? 'Reservado'
-              : reserving === product.id
-              ? 'Reservando…'
-              : isDonation
-              ? 'Obtener'
-              : 'Reservar'}
-          </button>
+          {isDonation ? (
+            <button
+              className="reserve-btn"
+              onClick={() => onReserve(product.id)}
+              disabled={product.is_reserved || reserving === product.id}
+            >
+              {product.is_reserved ? 'Reservado' : reserving === product.id ? 'Reservando…' : 'Obtener'}
+            </button>
+          ) : (
+            <button
+              className="buy-btn"
+              onClick={() => onBuy(product)}
+              disabled={product.is_reserved}
+            >
+              {product.is_reserved ? 'No disponible' : 'Comprar'}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -90,6 +203,7 @@ function ObtenerAlimento() {
   const [error, setError] = useState('')
   const [reserving, setReserving] = useState(null)
   const [toast, setToast] = useState(null)
+  const [payProduct, setPayProduct] = useState(null)
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
@@ -122,6 +236,15 @@ function ObtenerAlimento() {
   const showToast = (msg, isError = false) => {
     setToast({ msg, isError })
     setTimeout(() => setToast(null), 3000)
+  }
+
+  const handleBuy = (product) => {
+    if (!isAuthenticated) { navigate('/login'); return }
+    setPayProduct(product)
+  }
+
+  const handlePaySuccess = (productId) => {
+    setProducts(prev => prev.map(p => p.id === productId ? { ...p, is_reserved: true } : p))
   }
 
   const handleReserve = async (productId) => {
@@ -240,6 +363,7 @@ function ObtenerAlimento() {
                   key={p.id}
                   product={p}
                   onReserve={handleReserve}
+                  onBuy={handleBuy}
                   reserving={reserving}
                 />
               ))}
@@ -252,6 +376,14 @@ function ObtenerAlimento() {
         <div className={`toast ${toast.isError ? 'toast-error' : 'toast-success'}`}>
           {toast.msg}
         </div>
+      )}
+
+      {payProduct && (
+        <PaymentModal
+          product={payProduct}
+          onClose={() => setPayProduct(null)}
+          onSuccess={handlePaySuccess}
+        />
       )}
     </div>
   )
