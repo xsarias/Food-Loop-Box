@@ -1,14 +1,24 @@
+import { useState, useEffect } from 'react';
 import { FaHandPaper } from "react-icons/fa";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import { MdSell } from "react-icons/md";
 import { FiBox } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import "./Home.css"
 
 function Home() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
+  const [expiringCount, setExpiringCount] = useState(0)
+
+  useEffect(() => {
+    if (!isAuthenticated || !['admin', 'partner'].includes(user?.role)) return
+    api.get('/products/products/expiring_soon/')
+      .then(res => setExpiringCount(res.data.count ?? (res.data.products?.length ?? 0)))
+      .catch(() => {})
+  }, [isAuthenticated, user])
 
   const handleLogout = async () => {
     await logout()
@@ -37,6 +47,12 @@ function Home() {
             {['admin', 'partner'].includes(user.role) && (
               <button className="inventario-btn" type="button" onClick={() => navigate('/inventario')}>
                 Inventario
+              </button>
+            )}
+            {['admin', 'partner'].includes(user.role) && (
+              <button className="alertas-btn" type="button" onClick={() => navigate('/alertas')}>
+                Alertas
+                {expiringCount > 0 && <span className="alert-badge">{expiringCount}</span>}
               </button>
             )}
             {user.role === 'admin' && (

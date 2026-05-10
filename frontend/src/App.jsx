@@ -10,6 +10,7 @@ import ReclamarAlimento from './pages/ReclamarAlimento'
 import VenderAlimento from './pages/VenderAlimento'
 import Dashboard from './pages/Dashboard'
 import Inventario from './pages/Inventario'
+import Alertas from './pages/Alertas'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/reclamar" element={<ReclamarAlimento />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/alertas" element={<Alertas />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
