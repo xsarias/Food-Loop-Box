@@ -8,9 +8,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from django.db.models import Sum, Count, Avg
+from django.db.models import Sum, Count, Avg, Case, When, F, FloatField, Value, ExpressionWrapper
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 from apps.analytics.models import (
     DailyStatistics, LocationMetrics, PartnerMetrics,
     EnvironmentalImpact, UserActivityReport
@@ -285,39 +285,150 @@ class DashboardViewSet(viewsets.ViewSet):
     
     @action(detail=False, methods=['get'])
     def overview(self, request):
-        """Get complete dashboard overview"""
-        today = timezone.now().date()
-        
-        # Get today's stats
-        today_stats, _ = DailyStatistics.objects.get_or_create(date=today)
-        
-        # Get this week's totals
-        week_ago = today - timedelta(days=7)
-        week_stats = DailyStatistics.objects.filter(
-            date__range=[week_ago, today]
-        ).aggregate(
-            total_products=Sum('total_products_registered'),
-            total_weight=Sum('total_weight_rescued'),
-            total_amount=Sum('total_amount'),
-            total_transactions=Sum('total_transactions'),
+        """Get complete dashboard overview — computed live from product/transaction data."""
+        from django.contrib.auth import get_user_model
+        from apps.products.models import Product
+        from apps.transactions.models import Transaction, Reservation
+
+        User = get_user_model()
+
+        now = timezone.now()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = today_start - timedelta(days=7)
+
+        # Normalize weight to kg (kg→kg, g→kg, others→0)
+        weight_expr = ExpressionWrapper(
+            Case(
+                When(unit='kg', then=F('quantity')),
+                When(unit='g', then=F('quantity') / Value(1000.0)),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField(),
         )
-        
-        # Get top locations
-        top_locations = LocationMetrics.objects.order_by('-total_weight_rescued')[:5]
-        
-        # Get top partners
-        top_partners = PartnerMetrics.objects.order_by('-total_weight_donated')[:5]
-        
-        # Get environmental impact
+
+        # ── This week ──────────────────────────────────────────────────────────
+        week_prods = Product.objects.filter(registration_date__gte=week_start)
+        week_txns = Transaction.objects.filter(created_at__gte=week_start, status='completed')
+        week_weight = week_prods.annotate(w=weight_expr).aggregate(s=Sum('w'))['s'] or 0
+
+        this_week = {
+            'total_products': week_prods.count(),
+            'total_weight': round(week_weight, 2),
+            'total_amount': float(week_txns.aggregate(s=Sum('amount'))['s'] or 0),
+            'total_transactions': week_txns.count(),
+        }
+
+        # ── Today ──────────────────────────────────────────────────────────────
+        today_prods = Product.objects.filter(registration_date__gte=today_start)
+        today_donated = Product.objects.filter(
+            product_type='donation', status='collected', updated_at__gte=today_start
+        )
+        today_sold = Product.objects.filter(
+            product_type='sale', status='collected', updated_at__gte=today_start
+        )
+        today_expired = Product.objects.filter(
+            expiration_date__date=now.date(), status='expired'
+        )
+        today_active = (
+            Reservation.objects.filter(reservation_date__gte=today_start)
+            .values('user').distinct().count()
+        )
+
+        today_stats = {
+            'total_products_registered': today_prods.count(),
+            'total_products_donated': today_donated.count(),
+            'total_products_sold': today_sold.count(),
+            'total_products_expired': today_expired.count(),
+            'new_users': User.objects.filter(date_joined__gte=today_start).count(),
+            'active_users': today_active,
+        }
+
+        # ── Top partners ───────────────────────────────────────────────────────
+        partner_rows = (
+            Product.objects.filter(product_type='donation')
+            .values('provider__id', 'provider__name')
+            .annotate(cnt=Count('id'))
+            .order_by('-cnt')[:5]
+        )
+        top_partners = []
+        for row in partner_rows:
+            pid = row['provider__id']
+            weight = float(
+                Product.objects.filter(provider_id=pid, product_type='donation')
+                .annotate(w=weight_expr).aggregate(s=Sum('w'))['s'] or 0
+            )
+            revenue = float(
+                Transaction.objects.filter(
+                    product__provider_id=pid, product__product_type='sale', status='completed'
+                ).aggregate(s=Sum('amount'))['s'] or 0
+            )
+            lives = Product.objects.filter(
+                provider_id=pid, product_type='donation', status='collected'
+            ).count()
+            top_partners.append({
+                'id': pid,
+                'partner_name': row['provider__name'],
+                'total_weight_donated': round(weight, 2),
+                'lives_impacted': lives,
+                'total_revenue_from_sales': revenue,
+            })
+
+        # ── Top locations ──────────────────────────────────────────────────────
+        location_rows = (
+            Product.objects.filter(provider__location__isnull=False)
+            .values('provider__location__id', 'provider__location__name')
+            .annotate(cnt=Count('id'))
+            .order_by('-cnt')[:5]
+        )
+        top_locations = []
+        for row in location_rows:
+            lid = row['provider__location__id']
+            weight = float(
+                Product.objects.filter(provider__location_id=lid)
+                .annotate(w=weight_expr).aggregate(s=Sum('w'))['s'] or 0
+            )
+            revenue = float(
+                Transaction.objects.filter(
+                    product__provider__location_id=lid, status='completed'
+                ).aggregate(s=Sum('amount'))['s'] or 0
+            )
+            unique_customers = (
+                Transaction.objects.filter(
+                    product__provider__location_id=lid, status='completed'
+                ).values('buyer').distinct().count()
+            )
+            top_locations.append({
+                'id': lid,
+                'location_name': row['provider__location__name'],
+                'total_weight_rescued': round(weight, 2),
+                'unique_customers': unique_customers,
+                'total_revenue': revenue,
+            })
+
+        # ── Environmental impact ───────────────────────────────────────────────
         try:
             latest_impact = EnvironmentalImpact.objects.latest('end_date')
+            impact_data = EnvironmentalImpactSerializer(latest_impact).data
         except EnvironmentalImpact.DoesNotExist:
-            latest_impact = None
-        
+            total_kg = float(
+                Product.objects.filter(status='collected')
+                .annotate(w=weight_expr).aggregate(s=Sum('w'))['s'] or 0
+            )
+            if total_kg > 0:
+                impact_data = {
+                    'estimated_co2_avoided_kg': round(total_kg * 2.5, 2),
+                    'estimated_water_saved_liters': round(total_kg * 1000, 0),
+                    'people_fed': int(total_kg / 0.5),
+                    'families_supported': int(total_kg / 3.0),
+                }
+            else:
+                impact_data = None
+
         return Response({
-            'today': DailyStatisticsSerializer(today_stats).data,
-            'this_week': week_stats,
-            'top_locations': LocationMetricsSerializer(top_locations, many=True).data,
-            'top_partners': PartnerMetricsSerializer(top_partners, many=True).data,
-            'environmental_impact': EnvironmentalImpactSerializer(latest_impact).data if latest_impact else None,
+            'today': today_stats,
+            'this_week': this_week,
+            'top_locations': top_locations,
+            'top_partners': top_partners,
+            'environmental_impact': impact_data,
         })

@@ -34,6 +34,11 @@ function Home() {
             >
               Hola, <strong>{user.first_name || user.username}</strong>
             </span>
+            {user.role === 'admin' && (
+              <button className="dashboard-btn" type="button" onClick={() => navigate('/dashboard')}>
+                Dashboard
+              </button>
+            )}
             <button className="login-btn" type="button" onClick={handleLogout}>
               Cerrar sesión
             </button>

@@ -135,6 +135,23 @@
   box-shadow: 0 8px 18px rgba(20, 48, 42, 0.2);
 }
 
+.dashboard-btn {
+  background: linear-gradient(135deg, #1a3a7a, #2e5fc2);
+  color: #f0f5ff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.15rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(26, 58, 122, 0.25);
+}
+
 .home-main {
   max-width: 1080px;
   margin: 1.5rem auto 0;
