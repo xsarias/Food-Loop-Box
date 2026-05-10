@@ -1,0 +1,203 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+
+:root {
+  --leaf-900: #14302a;
+  --leaf-700: #1f4d42;
+  --leaf-500: #2f7f67;
+  --cream: #fffdf6;
+  --char: #1f2524;
+}
+
+.auth-page {
+  min-height: 100vh;
+  font-family: "Manrope", sans-serif;
+  color: var(--char);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(246, 201, 95, 0.35), transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(47, 127, 103, 0.25), transparent 35%),
+    linear-gradient(160deg, var(--cream), #f3fbf7 55%, #edf7f2 100%);
+  padding: 1rem 1.2rem 2.2rem;
+}
+
+.auth-header {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.auth-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auth-brand h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--leaf-900);
+}
+
+.auth-brand p {
+  margin: 0.1rem 0 0;
+  font-size: 0.84rem;
+  color: var(--leaf-700);
+}
+
+.auth-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(20, 48, 42, 0.08);
+  border-radius: 24px;
+  padding: 2rem 2.2rem;
+  box-shadow: 0 16px 40px rgba(20, 48, 42, 0.1);
+  width: 100%;
+  max-width: 420px;
+  animation: rise 0.55s ease-out;
+}
+
+.auth-card h1 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.85rem;
+  color: var(--leaf-900);
+}
+
+.auth-subtitle {
+  margin: 0.4rem 0 1.4rem;
+  color: #3a524d;
+  font-size: 0.93rem;
+  line-height: 1.4;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-group label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--leaf-900);
+}
+
+.field-group input,
+.field-group select {
+  border: 1.5px solid rgba(20, 48, 42, 0.18);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.95rem;
+  color: var(--char);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field-group input:focus,
+.field-group select:focus {
+  border-color: var(--leaf-500);
+  box-shadow: 0 0 0 3px rgba(47, 127, 103, 0.14);
+}
+
+.field-group input::placeholder {
+  color: #9bb0ab;
+}
+
+.auth-error {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #c0392b;
+  background: #fdf0ee;
+  border: 1px solid #f5c6c1;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+}
+
+.auth-submit {
+  margin-top: 0.4rem;
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(20, 48, 42, 0.18);
+}
+
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  margin: 1.1rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #3a524d;
+}
+
+.auth-switch a {
+  color: var(--leaf-500);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.4rem 1.2rem;
+  }
+}

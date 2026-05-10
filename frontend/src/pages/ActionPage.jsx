@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/FLP_log.png";
 import "./ActionPage.css";
 
 function ActionPage({ title, subtitle, tags, ctaPrimary, ctaSecondary }) {
@@ -9,7 +8,7 @@ function ActionPage({ title, subtitle, tags, ctaPrimary, ctaSecondary }) {
     <div className="action-page">
       <header className="action-header">
         <div className="action-brand">
-          <img src={logo} alt="Food Loop Box" className="action-brand-logo" />
+          <div className="brand-icon">FLB</div>
           <div>
             <h2>Food Loop Box</h2>
             <p>Interfaz inicial</p>

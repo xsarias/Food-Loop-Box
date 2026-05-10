@@ -46,6 +46,36 @@
   object-fit: contain;
 }
 
+.brand-icon-home {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.4rem;
+}
+
 .brand-block h2 {
   margin: 0;
   font-size: 1.1rem;
@@ -74,6 +104,35 @@
 .login-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(20, 48, 42, 0.15);
+}
+
+.user-block {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  color: var(--leaf-700);
+}
+
+.register-btn {
+  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
+  color: #f2fffc;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.15rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: "Manrope", sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(20, 48, 42, 0.2);
 }
 
 .home-main {

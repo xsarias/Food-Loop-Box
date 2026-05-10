@@ -32,6 +32,21 @@
   object-fit: contain;
 }
 
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1f4d42, #2f7f67);
+  color: #f2fffc;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .action-brand h2 {
   margin: 0;
   font-size: 1.05rem;
