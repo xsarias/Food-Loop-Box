@@ -275,6 +275,39 @@
   color: #3a524d;
 }
 
+.locker-badge {
+  margin: -0.4rem 0 1.2rem;
+  background: #e7f8ef;
+  border: 1.5px solid rgba(47, 127, 103, 0.28);
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.locker-badge p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #234c41;
+}
+
+.locker-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.locker-svg {
+  width: 100%;
+  height: 100%;
+  stroke: #1f6048;
+  fill: rgba(47, 127, 103, 0.08);
+  stroke-width: 1.6;
+}
+
 .success-actions {
   display: flex;
   flex-direction: column;

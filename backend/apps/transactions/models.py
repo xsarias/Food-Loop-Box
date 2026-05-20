@@ -9,6 +9,28 @@ from apps.products.models import Product
 from apps.core.models import SmartDevice
 
 
+class Locker(models.Model):
+    """Locker storage compartments for reservations"""
+
+    LOCKER_STATUS = [
+        ('libre', 'Libre'),
+        ('ocupado', 'Ocupado'),
+    ]
+
+    numero = models.PositiveIntegerField(unique=True)
+    estado = models.CharField(max_length=10, choices=LOCKER_STATUS, default='libre')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['numero']
+        verbose_name = 'Locker'
+        verbose_name_plural = 'Lockers'
+
+    def __str__(self):
+        return f"Locker #{self.numero} ({self.get_estado_display()})"
+
+
+
 class Transaction(models.Model):
     """Financial transactions for purchased products"""
     
@@ -85,6 +107,9 @@ class Reservation(models.Model):
     
     # Notes
     notes = models.TextField(blank=True)
+    locker = models.ForeignKey(
+        'Locker', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

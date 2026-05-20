@@ -11,6 +11,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django.utils import timezone
 from datetime import timedelta
 from apps.products.models import FoodCategory, Product
+from apps.transactions.models import Locker, Reservation
 from apps.products.serializers import (
     FoodCategorySerializer, ProductSerializer, ProductListSerializer,
     ProductCreateSerializer, ProductUpdateSerializer, ProductDetailSerializer
@@ -43,7 +44,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     Provides CRUD operations for food products
     """
-    queryset = Product.objects.select_related('category', 'provider', 'registered_by', 'reserved_by')
+    queryset = Product.objects.select_related('category', 'provider', 'registered_by', 'reserved_by', 'locker')
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['status', 'product_type', 'category', 'provider', 'is_reserved']
@@ -88,9 +89,29 @@ class ProductViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated()]
         return super().get_permissions()
     
-    def perform_create(self, serializer):
-        """Create a new product and assign it to registered_by"""
-        serializer.save(registered_by=self.request.user)
+    def create(self, request, *args, **kwargs):
+        """Create product and auto-assign first available locker."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        from django.db import transaction
+
+        with transaction.atomic():
+            locker = Locker.objects.select_for_update().filter(estado='libre').order_by('numero').first()
+            if not locker:
+                return Response(
+                    {'detail': 'No hay lockers disponibles para registrar el producto'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            locker.estado = 'ocupado'
+            locker.save()
+
+            product = serializer.save(registered_by=request.user, locker=locker)
+
+        output = ProductSerializer(product, context=self.get_serializer_context()).data
+        headers = self.get_success_headers(output)
+        return Response(output, status=status.HTTP_201_CREATED, headers=headers)
     
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def available(self, request):
@@ -155,25 +176,33 @@ class ProductViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        expiration_date = timezone.now() + timedelta(days=3)
+
+        if not product.locker:
+            return Response(
+                {'detail': 'El producto no tiene locker asignado'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # mark product reserved
         product.is_reserved = True
         product.reserved_by = request.user
         product.reservation_date = timezone.now()
         product.save()
-        
-        # Create reservation record
-        from apps.transactions.models import Reservation
-        expiration_date = timezone.now() + timedelta(days=3)
+
         Reservation.objects.create(
             user=request.user,
             product=product,
             expiration_date=expiration_date,
-            status='active'
+            status='active',
+            locker=product.locker
         )
-        
+
         serializer = self.get_serializer(product)
         return Response({
             'detail': 'Producto reservado exitosamente',
-            'product': serializer.data
+            'product': serializer.data,
+            'locker_num': product.locker.numero
         }, status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])

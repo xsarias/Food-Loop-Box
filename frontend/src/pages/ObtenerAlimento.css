@@ -81,6 +81,31 @@
   margin: 1.8rem auto 0;
 }
 
+/* Modal overlay (reused) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 16, 14, 0.45);
+  z-index: 1200;
+}
+
+.locker-modal {
+  background: #fff;
+  padding: 1.4rem 1.6rem;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 14px 40px rgba(20,48,42,0.12);
+}
+
+.locker-modal h2 { margin: 0 0 0.6rem; font-size: 1.2rem; }
+.locker-modal p { margin: 0 0 1rem; color: #3b5950; }
+.locker-modal .btn-done { padding: 0.6rem 1rem; border-radius: 10px; background: linear-gradient(135deg,#1f4d42,#2f7f67); color: #fff; border: none; font-weight: 700; }
+
 .obtener-title-row {
   margin-bottom: 1.4rem;
 }
@@ -613,6 +638,44 @@
   margin: 0;
   font-size: 0.78rem;
   color: #5a7570;
+}
+
+.locker-chip {
+  margin: 0 0 0.45rem;
+  background: #f0fbf6;
+  border: 1px solid rgba(47, 127, 103, 0.28);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.locker-chip-icon {
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.locker-svg {
+  width: 100%;
+  height: 100%;
+  stroke: #1f6048;
+  fill: rgba(47, 127, 103, 0.08);
+  stroke-width: 1.6;
+}
+
+.locker-chip .code-hint {
+  font-size: 0.8rem;
+  color: #2c5a4f;
+}
+
+.locker-chip-centered {
+  justify-content: center;
+  margin: 0.2rem 0 1rem;
 }
 
 .btn-done {

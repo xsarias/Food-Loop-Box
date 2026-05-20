@@ -16,6 +16,8 @@ from apps.transactions.serializers import (
     CollectionSerializer, CollectionListSerializer,
     DeviceInteractionSerializer, DeviceInteractionLogSerializer
 )
+from apps.transactions.serializers import LockerSerializer
+from apps.transactions.models import Locker
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -49,6 +51,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create transaction and assign buyer"""
         serializer.save(buyer=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        """Create transaction and return full transaction payload including locker_num."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        instance = serializer.instance
+        output = TransactionSerializer(instance, context={'request': request}).data
+        headers = self.get_success_headers(output)
+        return Response(output, status=status.HTTP_201_CREATED, headers=headers)
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -86,6 +98,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
         
         # Mark product as collected
         transaction.product.status = 'collected'
+        transaction.product.is_reserved = False
+        transaction.product.reserved_by = None
+        transaction.product.reservation_date = None
+
+        # Free product locker if this transaction completes the pickup
+        locker = transaction.product.locker
+        if locker:
+            locker.estado = 'libre'
+            locker.save()
+            transaction.product.locker = None
         transaction.product.save()
         
         serializer = self.get_serializer(transaction)
@@ -207,15 +229,50 @@ class ReservationViewSet(viewsets.ModelViewSet):
         
         reservation.status = 'cancelled'
         reservation.save()
-        
+
         # Release product reservation
         reservation.product.is_reserved = False
         reservation.product.reserved_by = None
         reservation.product.save()
-        
+
         serializer = self.get_serializer(reservation)
         return Response({
             'detail': 'Reserva cancelada',
+            'reservation': serializer.data
+        })
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def confirm_pickup(self, request, pk=None):
+        """User confirms they picked up the reserved product; free locker."""
+        reservation = self.get_object()
+
+        if reservation.user != request.user and not request.user.is_staff:
+            return Response({'detail': 'No tienes permiso para confirmar este retiro'}, status=status.HTTP_403_FORBIDDEN)
+
+        if reservation.status != 'active':
+            return Response({'detail': 'Reserva no está en estado activo'}, status=status.HTTP_400_BAD_REQUEST)
+
+        reservation.status = 'completed'
+        reservation.collection_date = timezone.now()
+        reservation.save()
+
+        # Update product status
+        reservation.product.status = 'collected'
+        reservation.product.is_reserved = False
+        reservation.product.reserved_by = None
+        reservation.product.reservation_date = None
+
+        # Free product locker after pickup
+        locker = reservation.product.locker
+        if locker:
+            locker.estado = 'libre'
+            locker.save()
+            reservation.product.locker = None
+        reservation.product.save()
+
+        serializer = self.get_serializer(reservation)
+        return Response({
+            'detail': 'Retiro confirmado. Locker liberado',
             'reservation': serializer.data
         })
 
@@ -270,7 +327,27 @@ class CollectionViewSet(viewsets.ModelViewSet):
         
         # Update product status
         collection.product.status = 'collected'
+        collection.product.is_reserved = False
+        collection.product.reserved_by = None
+        collection.product.reservation_date = None
+
+        locker = collection.product.locker
+        if locker:
+            locker.estado = 'libre'
+            locker.save()
+            collection.product.locker = None
         collection.product.save()
+
+        # If there is an active reservation for this product, mark it completed and free locker
+        try:
+            from apps.transactions.models import Reservation
+            res = Reservation.objects.filter(product=collection.product, status='active').first()
+            if res:
+                res.status = 'completed'
+                res.collection_date = timezone.now()
+                res.save()
+        except Exception:
+            pass
         
         serializer = self.get_serializer(collection)
         return Response(serializer.data)
@@ -320,3 +397,25 @@ class DeviceInteractionViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LockerViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Read-only viewset to list and inspect lockers and their state
+    """
+    queryset = Locker.objects.all()
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['estado']
+    search_fields = ['numero']
+    ordering_fields = ['numero', 'created_at']
+    ordering = ['numero']
+
+    def get_serializer_class(self):
+        return LockerSerializer
+
+    def get_permissions(self):
+        # allow authenticated users to list lockers; admins retain full access
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        return super().get_permissions()

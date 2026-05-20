@@ -11,6 +11,25 @@ const PAYMENT_METHODS = [
   { key: 'transfer',       label: 'Transferencia',    icon: '🏦' },
 ]
 
+function LockerIcon() {
+  return (
+    <svg
+      className="locker-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <line x1="12" y1="3" x2="12" y2="21" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <circle cx="9" cy="9" r="0.8" />
+      <circle cx="15" cy="9" r="0.8" />
+      <circle cx="9" cy="15" r="0.8" />
+      <circle cx="15" cy="15" r="0.8" />
+    </svg>
+  )
+}
+
 function PaymentModal({ product, onClose, onSuccess }) {
   const [method, setMethod] = useState('cash')
   const [loading, setLoading] = useState(false)
@@ -63,6 +82,14 @@ function PaymentModal({ product, onClose, onSuccess }) {
             <div className="code-box">
               <p className="code-label">Código de retiro</p>
               <p className="code-value">{result.withdrawal_code}</p>
+              {result.locker_num && (
+                <div className="locker-chip" role="status" aria-live="polite">
+                  <span className="locker-chip-icon" aria-hidden="true">
+                    <LockerIcon />
+                  </span>
+                  <p className="code-hint">Tu producto está en el locker <strong>#{result.locker_num}</strong></p>
+                </div>
+              )}
               <p className="code-hint">Preséntalo en el locker para retirar tu producto</p>
             </div>
             <button className="btn-done" onClick={onClose}>Listo</button>
@@ -204,6 +231,8 @@ function ObtenerAlimento() {
   const [reserving, setReserving] = useState(null)
   const [toast, setToast] = useState(null)
   const [payProduct, setPayProduct] = useState(null)
+  const [lockerAssigned, setLockerAssigned] = useState(null)
+  const [lockerModalOpen, setLockerModalOpen] = useState(false)
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
@@ -254,16 +283,39 @@ function ObtenerAlimento() {
     }
     setReserving(productId)
     try {
-      await api.post(`/products/products/${productId}/reserve/`)
+      const { data } = await api.post(`/products/products/${productId}/reserve/`)
       setProducts((prev) =>
         prev.map((p) => (p.id === productId ? { ...p, is_reserved: true } : p))
       )
+      // show locker modal if backend returned locker_num
+      if (data.locker_num) {
+        setLockerAssigned(data.locker_num)
+        setLockerModalOpen(true)
+      }
       showToast('¡Producto reservado exitosamente!')
     } catch (err) {
       showToast(err.response?.data?.detail || 'No se pudo reservar el producto', true)
     } finally {
       setReserving(null)
     }
+  }
+
+  function LockerModal({ lockerNum, onClose }) {
+    if (!lockerNum) return null
+    return (
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="locker-modal" onClick={(e) => e.stopPropagation()}>
+          <h2>¡Reserva confirmada!</h2>
+          <div className="locker-chip locker-chip-centered" role="status" aria-live="polite">
+            <span className="locker-chip-icon" aria-hidden="true">
+              <LockerIcon />
+            </span>
+            <p className="code-hint">Tu locker asignado es el <strong>#{lockerNum}</strong></p>
+          </div>
+          <button className="btn-done" onClick={onClose}>Entendido</button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -385,6 +437,9 @@ function ObtenerAlimento() {
           onSuccess={handlePaySuccess}
         />
       )}
+        {lockerModalOpen && (
+          <LockerModal lockerNum={lockerAssigned} onClose={() => setLockerModalOpen(false)} />
+        )}
     </div>
   )
 }

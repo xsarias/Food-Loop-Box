@@ -3,7 +3,7 @@ Admin configuration for Transactions app
 """
 
 from django.contrib import admin
-from apps.transactions.models import Transaction, Reservation, Collection, DeviceInteraction
+from apps.transactions.models import Transaction, Reservation, Collection, DeviceInteraction, Locker
 
 
 @admin.register(Transaction)
@@ -102,5 +102,21 @@ class DeviceInteractionAdmin(admin.ModelAdmin):
         }),
         ('Metadata', {
             'fields': ('timestamp',)
+        }),
+    )
+
+
+@admin.register(Locker)
+class LockerAdmin(admin.ModelAdmin):
+    list_display = ('numero', 'estado', 'created_at')
+    list_filter = ('estado',)
+    search_fields = ('numero',)
+    readonly_fields = ('created_at',)
+    fieldsets = (
+        ('Locker', {
+            'fields': ('numero', 'estado')
+        }),
+        ('Metadata', {
+            'fields': ('created_at',)
         }),
     )

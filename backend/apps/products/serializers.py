@@ -24,6 +24,7 @@ class ProductSerializer(serializers.ModelSerializer):
     reserved_by_username = serializers.CharField(source='reserved_by.username', read_only=True, allow_null=True)
     is_expired_status = serializers.SerializerMethodField()
     compartment_number = serializers.SerializerMethodField()
+    locker_num = serializers.IntegerField(source='locker.numero', read_only=True)
     
     class Meta:
         model = Product
@@ -34,7 +35,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'original_price', 'discounted_price', 'discount_percentage', 'final_price',
             'required_temperature', 'temperature_min', 'temperature_max',
             'registration_date', 'expiration_date', 'expiration_alert_sent',
-            'compartment', 'compartment_number', 'is_reserved', 'reserved_by',
+            'compartment', 'compartment_number', 'locker', 'locker_num', 'is_reserved', 'reserved_by',
             'reserved_by_username', 'reservation_date', 'image', 'notes',
             'is_expired_status', 'created_at', 'updated_at'
         ]
@@ -58,13 +59,14 @@ class ProductListSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
     provider_name = serializers.CharField(source='provider.name', read_only=True)
     final_price = serializers.SerializerMethodField()
+    locker_num = serializers.IntegerField(source='locker.numero', read_only=True)
     
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'category_name', 'provider_name', 'status',
             'product_type', 'quantity', 'unit', 'final_price',
-            'expiration_date', 'is_reserved', 'image', 'created_at'
+            'expiration_date', 'is_reserved', 'locker_num', 'image', 'created_at'
         ]
         read_only_fields = fields
     

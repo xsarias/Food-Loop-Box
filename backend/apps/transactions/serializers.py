@@ -4,6 +4,7 @@ Serializers for Transactions app
 
 from rest_framework import serializers
 from apps.transactions.models import Transaction, Reservation, Collection, DeviceInteraction
+from apps.transactions.models import Locker
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -11,12 +12,13 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     buyer_username = serializers.CharField(source='buyer.username', read_only=True)
     product_name = serializers.CharField(source='product.name', read_only=True)
+    locker_num = serializers.IntegerField(source='product.locker.numero', read_only=True)
     
     class Meta:
         model = Transaction
         fields = [
             'id', 'transaction_id', 'buyer', 'buyer_username', 'product',
-            'product_name', 'amount', 'currency', 'payment_method', 'status',
+            'product_name', 'locker_num', 'amount', 'currency', 'payment_method', 'status',
             'withdrawal_code', 'withdrawal_code_used', 'withdrawal_date',
             'notes', 'created_at', 'updated_at'
         ]
@@ -30,12 +32,13 @@ class TransactionListSerializer(serializers.ModelSerializer):
     
     buyer_username = serializers.CharField(source='buyer.username', read_only=True)
     product_name = serializers.CharField(source='product.name', read_only=True)
+    locker_num = serializers.IntegerField(source='product.locker.numero', read_only=True)
     
     class Meta:
         model = Transaction
         fields = [
             'id', 'transaction_id', 'buyer_username', 'product_name',
-            'amount', 'payment_method', 'status', 'created_at'
+            'locker_num', 'amount', 'payment_method', 'status', 'created_at'
         ]
         read_only_fields = fields
 
@@ -48,6 +51,11 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
         fields = [
             'product', 'amount', 'currency', 'payment_method', 'notes'
         ]
+
+    def validate_product(self, product):
+        if not product.locker:
+            raise serializers.ValidationError('Este producto no tiene locker asignado')
+        return product
     
     def create(self, validated_data):
         import uuid
@@ -62,11 +70,13 @@ class ReservationSerializer(serializers.ModelSerializer):
     
     user_username = serializers.CharField(source='user.username', read_only=True)
     product_name = serializers.CharField(source='product.name', read_only=True)
+    locker_num = serializers.IntegerField(source='locker.numero', read_only=True)
     
     class Meta:
         model = Reservation
         fields = [
             'id', 'user', 'user_username', 'product', 'product_name',
+            'locker', 'locker_num',
             'status', 'reservation_date', 'expiration_date', 'collection_date',
             'notes', 'created_at', 'updated_at'
         ]
@@ -85,9 +95,11 @@ class ReservationListSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = [
             'id', 'user_username', 'product_name', 'status',
-            'reservation_date', 'expiration_date', 'collection_date'
+            'reservation_date', 'expiration_date', 'collection_date', 'locker_num'
         ]
         read_only_fields = fields
+
+    locker_num = serializers.IntegerField(source='locker.numero', read_only=True)
 
 
 class ReservationCreateSerializer(serializers.ModelSerializer):
@@ -167,3 +179,12 @@ class DeviceInteractionLogSerializer(serializers.ModelSerializer):
             'error_message', 'timestamp'
         ]
         read_only_fields = fields
+
+
+class LockerSerializer(serializers.ModelSerializer):
+    """Serializer for Locker model"""
+
+    class Meta:
+        model = Locker
+        fields = ['id', 'numero', 'estado', 'created_at']
+        read_only_fields = ['id', 'created_at']

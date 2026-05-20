@@ -22,9 +22,27 @@ const INITIAL = {
   original_price: '',
   discounted_price: '',
   expiration_date: '',
-  compartment: '',
   notes: '',
   image: null,
+}
+
+function LockerIcon() {
+  return (
+    <svg
+      className="locker-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <line x1="12" y1="3" x2="12" y2="21" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <circle cx="9" cy="9" r="0.8" />
+      <circle cx="15" cy="9" r="0.8" />
+      <circle cx="9" cy="15" r="0.8" />
+      <circle cx="15" cy="15" r="0.8" />
+    </svg>
+  )
 }
 
 function RegistrarProducto({ tipo }) {
@@ -39,10 +57,10 @@ function RegistrarProducto({ tipo }) {
   const [form, setForm] = useState(INITIAL)
   const [categories, setCategories] = useState([])
   const [partners, setPartners] = useState([])
-  const [compartments, setCompartments] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [assignedLocker, setAssignedLocker] = useState(null)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -52,11 +70,9 @@ function RegistrarProducto({ tipo }) {
     Promise.all([
       api.get('/products/categories/'),
       api.get('/core/partners/'),
-      api.get('/core/compartments/?status=available'),
-    ]).then(([cats, parts, comps]) => {
+    ]).then(([cats, parts]) => {
       setCategories(cats.data.results ?? [])
       setPartners(parts.data.results ?? [])
-      setCompartments(comps.data.results ?? [])
     }).catch(() => {})
   }, [isAuthenticated, navigate])
 
@@ -91,7 +107,6 @@ function RegistrarProducto({ tipo }) {
       payload.append('expiration_date', new Date(form.expiration_date).toISOString())
       if (form.description) payload.append('description', form.description)
       if (form.notes) payload.append('notes', form.notes)
-      if (form.compartment) payload.append('compartment', form.compartment)
       if (form.image) payload.append('image', form.image)
 
       if (isSale) {
@@ -100,9 +115,10 @@ function RegistrarProducto({ tipo }) {
         payload.append('discount_percentage', discountPct)
       }
 
-      await api.post('/products/products/', payload, {
+      const { data } = await api.post('/products/products/', payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
+      setAssignedLocker(data?.locker_num ?? null)
       setSuccess(true)
     } catch (err) {
       const data = err.response?.data
@@ -120,6 +136,7 @@ function RegistrarProducto({ tipo }) {
   const handleNuevo = () => {
     setForm(INITIAL)
     setSuccess(false)
+    setAssignedLocker(null)
   }
 
   if (success) {
@@ -129,6 +146,16 @@ function RegistrarProducto({ tipo }) {
           <span className="success-icon">{isSale ? '🛒' : '🤝'}</span>
           <h2>¡{isSale ? 'Oferta publicada' : 'Donación registrada'}!</h2>
           <p>El producto ya está disponible en el sistema.</p>
+          {assignedLocker && (
+            <div className="locker-badge">
+              <span className="locker-icon" aria-hidden="true">
+                <LockerIcon />
+              </span>
+              <p>
+                Locker asignado automáticamente: <strong>#{assignedLocker}</strong>
+              </p>
+            </div>
+          )}
           <div className="success-actions">
             <button className="reg-btn-primary" onClick={handleNuevo}>
               Registrar otro
@@ -286,29 +313,15 @@ function RegistrarProducto({ tipo }) {
 
           {/* Almacenamiento */}
           <div className="form-section">
-            <h3 className="section-title">Almacenamiento (opcional)</h3>
+            <h3 className="section-title">Detalles adicionales (opcional)</h3>
 
-            <div className="form-row">
-              <div className="field-group">
-                <label htmlFor="compartment">Compartimiento Food Loop Box</label>
-                <select id="compartment" name="compartment" value={form.compartment} onChange={handleChange}>
-                  <option value="">Sin asignar</option>
-                  {compartments.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.device_name} — #{c.compartment_number}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="field-group">
-                <label htmlFor="image">Foto del producto</label>
-                <input
-                  id="image" name="image" type="file"
-                  accept="image/*" onChange={handleChange}
-                  className="file-input"
-                />
-              </div>
+            <div className="field-group full">
+              <label htmlFor="image">Foto del producto</label>
+              <input
+                id="image" name="image" type="file"
+                accept="image/*" onChange={handleChange}
+                className="file-input"
+              />
             </div>
 
             <div className="field-group full">

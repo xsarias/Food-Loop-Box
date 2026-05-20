@@ -81,6 +81,7 @@ class Product(models.Model):
     
     # Storage location
     compartment = models.ForeignKey(Compartment, on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
+    locker = models.ForeignKey('transactions.Locker', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
     
     # Tracking
     is_reserved = models.BooleanField(default=False)
