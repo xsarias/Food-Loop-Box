@@ -34,7 +34,7 @@ function Login() {
     <div className="auth-page">
       <header className="auth-header">
         <div className="auth-brand" onClick={() => navigate('/')}>
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Red local contra el desperdicio</p>

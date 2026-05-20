@@ -168,7 +168,7 @@ function ReclamarAlimento() {
     <div className="reclamar-page">
       <header className="reclamar-header">
         <div className="reclamar-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Mis pedidos</p>

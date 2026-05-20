@@ -96,7 +96,7 @@ function Perfil() {
     <div className="perfil-page">
       <header className="perfil-header">
         <div className="perfil-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Mi perfil</p>

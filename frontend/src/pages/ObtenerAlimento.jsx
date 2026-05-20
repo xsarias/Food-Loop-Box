@@ -270,7 +270,7 @@ function ObtenerAlimento() {
     <div className="obtener-page">
       <header className="obtener-header">
         <div className="obtener-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Productos disponibles</p>

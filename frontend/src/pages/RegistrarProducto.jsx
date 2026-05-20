@@ -149,7 +149,7 @@ function RegistrarProducto({ tipo }) {
     <div className="reg-page">
       <header className="reg-header">
         <div className="reg-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>{isSale ? 'Venta de excedentes' : 'Donación de alimentos'}</p>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap");
 
 :root {
   --leaf-900: #14302a;
@@ -10,7 +10,7 @@
 
 .perfil-page {
   min-height: 100vh;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--char);
   background:
     radial-gradient(circle at 10% 10%, rgba(47, 127, 103, 0.2), transparent 36%),
@@ -39,21 +39,15 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
-  color: #f2fffc;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  display: block;
   flex-shrink: 0;
 }
 
 .perfil-brand h2 {
   margin: 0;
   font-size: 1.05rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--leaf-900);
 }
 
@@ -68,7 +62,7 @@
   border: 1.5px solid rgba(20, 48, 42, 0.15);
   border-radius: 999px;
   padding: 0.6rem 1.1rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--leaf-900);
@@ -109,7 +103,7 @@
   border-radius: 50%;
   background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
   color: #f2fffc;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 1.5rem;
   display: flex;
@@ -120,7 +114,7 @@
 
 .perfil-name {
   margin: 0 0 0.15rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.3rem;
   color: var(--leaf-900);
 }
@@ -156,7 +150,7 @@
 
 .section-title {
   margin: 0 0 1rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   color: var(--leaf-700);
   border-bottom: 1.5px solid rgba(20, 48, 42, 0.07);
@@ -218,7 +212,7 @@
   border: 1.5px solid rgba(20, 48, 42, 0.16);
   border-radius: 10px;
   padding: 0.62rem 0.85rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.93rem;
   color: var(--char);
   background: #fff;
@@ -265,7 +259,7 @@
   border: none;
   border-radius: 12px;
   padding: 0.75rem 1.4rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.93rem;
   cursor: pointer;
@@ -288,7 +282,7 @@
   border: none;
   border-radius: 12px;
   padding: 0.75rem 1.4rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.93rem;
   cursor: pointer;
@@ -320,7 +314,7 @@
   color: #c0392b;
   border-radius: 999px;
   padding: 0.65rem 1.6rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.93rem;
   cursor: pointer;

@@ -108,7 +108,7 @@ function Alertas() {
     <div className="alertas-page">
       <header className="alertas-header">
         <div className="alertas-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Alertas de vencimiento</p>

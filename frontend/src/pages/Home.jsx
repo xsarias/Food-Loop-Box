@@ -12,6 +12,7 @@ function Home() {
   const navigate = useNavigate()
   const { user, isAuthenticated, logout } = useAuth()
   const [expiringCount, setExpiringCount] = useState(0)
+  const logoSrc = '/LOGOflb.png'
 
   useEffect(() => {
     if (!isAuthenticated || !['admin', 'partner'].includes(user?.role)) return
@@ -28,7 +29,7 @@ function Home() {
     <div className="home-page">
       <header className="home-header">
         <div className="brand-block">
-          <div className="brand-icon-home">FLB</div>
+          <img className="brand-logo" src={logoSrc} alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Red local contra el desperdicio</p>
@@ -91,7 +92,7 @@ function Home() {
 
       <main className="home-main">
         <section className="hero-card">
-          <div className="hero-icon">FLB</div>
+          <img className="hero-logo" src={logoSrc} alt="Food Loop Box" />
           <h1>Food Loop Box</h1>
           <p>Lo que sobra, alimenta. Dona, comparte, recupera y mueve alimentos en tu comunidad.</p>
         </section>

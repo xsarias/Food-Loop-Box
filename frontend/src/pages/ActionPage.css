@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap");
 
 .action-page {
   min-height: 100vh;
   padding: 1rem 1.2rem 2rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: #1f2524;
   background:
     radial-gradient(circle at 10% 10%, rgba(47, 127, 103, 0.26), transparent 36%),
@@ -38,7 +38,7 @@
   border-radius: 12px;
   background: linear-gradient(135deg, #1f4d42, #2f7f67);
   color: #f2fffc;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   display: flex;
@@ -50,7 +50,7 @@
 .action-brand h2 {
   margin: 0;
   font-size: 1.05rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .action-brand p {
@@ -70,7 +70,7 @@
   border-radius: 999px;
   cursor: pointer;
   font-weight: 700;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   background: #ffffff;
   color: #26473f;
   border: 1px solid rgba(38, 71, 63, 0.15);
@@ -97,7 +97,7 @@
 
 .action-card h1 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: #163b31;
   font-size: clamp(1.6rem, 2.6vw, 2.4rem);
 }
@@ -137,7 +137,7 @@
   padding: 0.95rem 1rem;
   border-radius: 14px;
   font-weight: 700;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   cursor: pointer;
 }
 
@@ -178,11 +178,5 @@
     width: 100%;
   }
 
-  .head-btn {
-    flex: 1;
-  }
-
-  .cta-block {
-    grid-template-columns: 1fr;
-  }
-}
+    background: transparent;
+    display: block;

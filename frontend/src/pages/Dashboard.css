@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap");
 
 :root {
   --leaf-900: #14302a;
@@ -10,7 +10,7 @@
 
 .dash-page {
   min-height: 100vh;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--char);
   background:
     radial-gradient(circle at 10% 10%, rgba(47, 127, 103, 0.2), transparent 36%),
@@ -38,7 +38,7 @@
 .dash-brand h2 {
   margin: 0;
   font-size: 1.05rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--leaf-900);
 }
 
@@ -52,14 +52,8 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
-  color: #f2fffc;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  display: block;
   flex-shrink: 0;
 }
 
@@ -68,7 +62,7 @@
   border: 1.5px solid rgba(20, 48, 42, 0.15);
   border-radius: 999px;
   padding: 0.6rem 1.1rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--leaf-900);
@@ -96,7 +90,7 @@
 
 .dash-title-row h1 {
   margin: 0 0 0.2rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.6rem;
   color: var(--leaf-900);
 }
@@ -151,7 +145,7 @@
 
 .forbidden-box h2 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--leaf-900);
 }
 
@@ -173,7 +167,7 @@
 
 .section-title {
   margin: 0 0 1rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   color: var(--leaf-700);
   border-bottom: 1.5px solid rgba(20, 48, 42, 0.07);
@@ -206,7 +200,7 @@
 
 .kpi-value {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--leaf-900);
@@ -247,7 +241,7 @@
 }
 
 .today-val {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--leaf-900);
@@ -291,7 +285,7 @@
 
 .impact-val {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--leaf-700);
@@ -336,7 +330,7 @@
 }
 
 .rank-num {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   color: var(--leaf-500);
   font-size: 0.85rem;

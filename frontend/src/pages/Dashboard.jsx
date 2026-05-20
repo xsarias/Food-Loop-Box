@@ -79,7 +79,7 @@ function Dashboard() {
     <div className="dash-page">
       <header className="dash-header">
         <div className="dash-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Panel de administración</p>

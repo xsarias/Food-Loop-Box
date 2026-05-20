@@ -11,13 +11,14 @@ from apps.products.models import FoodCategory, Product
 from apps.analytics.models import DailyStatistics
 
 # Crear superusuario
-admin_user, created = User.objects.get_or_create(
+admin_user, created = User.objects.update_or_create(
     username='admin',
     defaults={
         'email': 'admin@foodloopbox.com',
         'first_name': 'Admin',
         'last_name': 'User',
         'role': 'admin',
+        'document_id': 'ADMIN-0001',
         'is_staff': True,
         'is_superuser': True,
         'is_verified': True,
@@ -30,18 +31,19 @@ if created:
 
 # Crear usuarios de prueba
 test_users = [
-    {'username': 'cliente1', 'email': 'cliente1@foodloopbox.com', 'role': 'customer', 'first_name': 'Juan'},
-    {'username': 'cliente2', 'email': 'cliente2@foodloopbox.com', 'role': 'customer', 'first_name': 'María'},
-    {'username': 'aliado1', 'email': 'aliado1@foodloopbox.com', 'role': 'partner', 'first_name': 'Restaurante'},
+    {'username': 'cliente1', 'email': 'cliente1@foodloopbox.com', 'role': 'customer', 'first_name': 'Juan', 'document_id': 'CC-1001'},
+    {'username': 'cliente2', 'email': 'cliente2@foodloopbox.com', 'role': 'customer', 'first_name': 'María', 'document_id': 'CC-1002'},
+    {'username': 'aliado1', 'email': 'aliado1@foodloopbox.com', 'role': 'partner', 'first_name': 'Restaurante', 'document_id': 'NIT-2001'},
 ]
 
 for user_data in test_users:
-    user, created = User.objects.get_or_create(
+    user, created = User.objects.update_or_create(
         username=user_data['username'],
         defaults={
             'email': user_data['email'],
             'first_name': user_data['first_name'],
             'role': user_data['role'],
+            'document_id': user_data['document_id'],
             'is_verified': True,
         }
     )

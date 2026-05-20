@@ -179,7 +179,7 @@ function Usuarios() {
     <div className="usuarios-page">
       <header className="usuarios-header">
         <div className="usuarios-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Gestión de usuarios</p>

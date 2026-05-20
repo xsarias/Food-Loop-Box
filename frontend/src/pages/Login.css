@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap");
 
 :root {
   --leaf-900: #14302a;
@@ -10,7 +10,7 @@
 
 .auth-page {
   min-height: 100vh;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--char);
   background:
     radial-gradient(circle at 15% 15%, rgba(246, 201, 95, 0.35), transparent 40%),
@@ -42,21 +42,15 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--leaf-700), var(--leaf-500));
-  color: #f2fffc;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  display: block;
   flex-shrink: 0;
 }
 
 .auth-brand h2 {
   margin: 0;
   font-size: 1.05rem;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: var(--leaf-900);
 }
 
@@ -87,7 +81,7 @@
 
 .auth-card h1 {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.85rem;
   color: var(--leaf-900);
 }
@@ -122,7 +116,7 @@
   border: 1.5px solid rgba(20, 48, 42, 0.18);
   border-radius: 10px;
   padding: 0.65rem 0.85rem;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.95rem;
   color: var(--char);
   background: #fff;
@@ -159,7 +153,7 @@
   padding: 0.85rem 1rem;
   font-size: 1rem;
   font-weight: 700;
-  font-family: "Manrope", sans-serif;
+  font-family: "Montserrat", sans-serif;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }

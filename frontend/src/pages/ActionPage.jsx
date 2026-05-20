@@ -8,7 +8,7 @@ function ActionPage({ title, subtitle, tags, ctaPrimary, ctaSecondary }) {
     <div className="action-page">
       <header className="action-header">
         <div className="action-brand">
-          <div className="brand-icon">FLB</div>
+          <img className="brand-icon" src="/LOGOflb.png" alt="Food Loop Box" />
           <div>
             <h2>Food Loop Box</h2>
             <p>Interfaz inicial</p>
